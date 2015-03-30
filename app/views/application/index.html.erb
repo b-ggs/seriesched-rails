@@ -1,0 +1,120 @@
+<body>
+    <header>
+        <nav class="red">
+            <div class="nav-wrapper container">
+                <a href="#" class="brand-logo">seriesched</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="#login-modal" class="modal-trigger">Login</a></li>
+                    <li><a href="#signup-modal" class="modal-trigger">Sign Up</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="#login-modal" class="modal-trigger">Login</a></li>
+                    <li><a href="#signup-modal" class="modal-trigger">Sign Up</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="parallax-container">
+        <div class="parallax">
+            <%= image_tag "para1.jpg", :class => "para1" %>
+        </div>
+    </div>
+    <div class="section white">
+        <div class="row container">
+            <h2 class="header">The next big thing is here.</h2>
+            <span class="grey-text text-darken-3 lighten-3">Get up-to-date schedules and show premieres anytime, anywhere.</span>
+        </div>
+    </div>
+    <div class="parallax-container">
+        <div class="parallax">
+            <%= image_tag "para2.jpg", :class => "para2" %>
+        </div>
+    </div>
+    <div class="section white">
+        <div class="row container">
+            <h2 class="header">Designed by TV junkies, for TV junkies.</h2>
+            <span class="grey-text text-darken-3 lighten-3">Keep tabs on all your favorite TV shows, whether you follow just one show or one hundred.</span>
+        </div>
+    </div>
+    <div class="parallax-container">
+        <div class="parallax">
+            <%= image_tag "para3.jpg", :class => "para3" %>
+        </div>
+    </div>
+    <div class="section white">
+        <div class="row container">
+            <div class="col s12 m8">
+                <span><h2 class="header">Don't miss out!</h2></span>
+                <p class="grey-text text-darken-3 lighten-3">Experience the game-changing service tailored to fit your TV needs. Sign up now!</p>
+            </div>
+            <div class="col s12 m4">
+                <div style="margin-top: 25px; text-align: right;">
+                    <a class="waves-effect waves-light btn-large modal-trigger" href="#login-modal" class="modal-trigger">Login</a>
+                    <a class="waves-effect waves-light btn-large modal-trigger" href="#signup-modal" class="modal-trigger">Sign Up</a>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h4>Login</h4>
+            <form action="home.html" method="POST">
+                    <div class="input-field col s6">
+                        <i class="mdi-social-person prefix"></i>
+                        <input id="username"  name="username" type="text" class="validate">
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="mdi-action-lock prefix"></i>
+                        <input id="password" name="password" type="password" class="validate">
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <a href="#" class="waves-effect waves-green btn-flat modal-action modal-close">Login</a> -->
+                    <button type="submit" class="waves-effect waves-green btn-flat" value="Sign Up"> Log in 
+                </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <h4>Sign Up</h4>
+            <form action="home.html" method="POST">
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <i class="mdi-social-person prefix"></i>
+                        <input id="username" name="username" type="text" class="validate">
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <i class="mdi-communication-email prefix"></i>
+                        <input id="email" name="email" type="text" class="validate">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <i class="mdi-action-lock prefix"></i>
+                        <input id="password" name="password" type="password" class="validate">
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <i class="mdi-action-lock prefix"></i>
+                        <input id="password2" name="password2" type="password" class="validate">
+                        <label for="password2">Confirm Password</label>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <!-- <a class="waves-effect waves-green btn-flat modal-action modal-close"> -->
+                <button type="submit" class="waves-effect waves-green btn-flat" value="Sign Up"> Sign Up 
+                </button>
+                <!-- </a> -->
+            </div>
+        </form>
+        </div>
+    </div>
+</body>
