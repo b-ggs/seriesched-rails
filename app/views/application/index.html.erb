@@ -61,7 +61,7 @@
     <div id="login-modal" class="modal">
         <div class="modal-content">
             <h4>Login</h4>
-            <form action="home.html" method="POST">
+           <%= form_tag('/login', method: :post) do %>
                     <div class="input-field col s6">
                         <i class="mdi-social-person prefix"></i>
                         <input id="username"  name="username" type="text" class="validate">
@@ -78,14 +78,14 @@
                     <button type="submit" class="waves-effect waves-green btn-flat" value="Sign Up"> Log in 
                 </button>
                 </div>
-            </form>
+           <%end%>
         </div>
     </div>
 
     <div id="signup-modal" class="modal">
         <div class="modal-content">
             <h4>Sign Up</h4>
-            <form action="home.html" method="POST">
+            <%= form_tag('/signup', method: :post) do %>
                 <div class="row">
                     <div class="input-field col s12 m6">
                         <i class="mdi-social-person prefix"></i>
@@ -114,7 +114,7 @@
                 </button>
                 <!-- </a> -->
             </div>
-        </form>
+       <%end %>
         </div>
     </div>
 </body>
