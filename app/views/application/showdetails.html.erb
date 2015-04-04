@@ -39,13 +39,19 @@
                 <div class="card">
                     <div class="card-content black-text">
                        <span class="card-title black-text">Season <%= j %><% j=j+1 %></span>
-                        
+                        <ol>
                         <% for k in 0..(@season[i].length-1) %> 
-                            <li> <%= @season[i][k] %> <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>     
-                        <% end %>   
-                       <ol>
-
+                            <%= form_tag('/pickEpisode', method: :post, id: 'ep-details') do %>
+                            <input name="season" type="hidden" value="<%= (i+1)%>" /> 
+                            <input name="ep" type="hidden" value="<%= k %>" /> 
+                            <li> <%= @season[i][k] %> <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>  
+                            
+                            <input type="submit" />  
+                        <% end %> 
+                        <% end %> <!--form tag -->  
                        </ol>
+                       
+                     
                     </div>
                 </div>
             </div>

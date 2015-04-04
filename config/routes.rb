@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   post 'search_action' => 'application#search_action'
   post 'showdetails_init' => 'application#showdetails_init'
   post 'showdetails_action' => 'application#showdetails_action'
-  post 'pickEpisode' => 'applications#pickEpisode'
+  post 'pickEpisode' => 'application#pickEpisode'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

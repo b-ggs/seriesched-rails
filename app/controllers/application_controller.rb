@@ -53,7 +53,9 @@ class ApplicationController < ActionController::Base
     s = params[:season]
     e = params[:ep]
 
-    session[:pickedEpisode] = s + "x"+e
+    session[:pickedEpisode] = s + "x" + e
+
+    redirect_to '/episodedetails'
   end
 
   def schedule
