@@ -14,8 +14,9 @@ Rails.application.routes.draw do
   post 'logout' => 'application#logout'
   post 'search_action' => 'application#search_action'
   post 'showdetails_init' => 'application#showdetails_init'
-  post 'showdetails_action' => 'application#showdetails_action'
-  post 'pickEpisode' => 'application#pickEpisode'
+  post 'showdetails_add' => 'application#showdetails_add'
+  post 'showdetails_remove' => 'application#showdetails_remove'
+  post 'episodedetails_init' => 'application#episodedetails_init'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

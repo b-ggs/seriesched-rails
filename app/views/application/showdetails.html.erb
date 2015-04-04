@@ -1,6 +1,6 @@
 <body>
     <div class="container">
-        <h4><%= @showid %> - <%= @show_name %></h4>
+        <h4><%= @show_name %></h4>
         <div class="row" style="margin-top: 10px;">
             <div class="col s12 m6">
                 <div class="card">
@@ -8,14 +8,21 @@
                         <%= image_tag @show_image, :class => "showdetails" %>
                     </div>
                     <div class="card-action">
-                    <%= @is_in_collection %>
                         <% if @is_in_collection %>
-                            <a href="#">Remove from Collection</a>
+                            <%= form_tag('/showdetails_remove', method: :post, id: 'show-remove') do %>
+                                <input type="hidden" name="showdetails_showid" value="<%= @showid %>" />
+                                <a href="" onclick="$(this).closest('form').submit();">Remove from Collection</a>
+                                <a href="<%= @show_showlink %>" target="_blank">View on TVRage</a>
+                            <% end %>
                         <% else %>
-                            <a href="#">Add to Collection</a>
+                            <%= form_tag('/showdetails_add', method: :post, id: 'show-add') do %>
+                                <input type="hidden" name="showdetails_showid" value="<%= @showid %>" />
+                                <a href="" onclick="$(this).closest('form').submit();">Add to Collection</a>
+                                <a href="<%= @show_showlink %>" target="_blank">View on TVRage</a>
+                            <% end %>
                         <% end %>
 
-                        <a href="<%= @show_showlink %>" target="_blank">View on TVRage</a>
+                        
                     </div>
                 </div>
             </div>
@@ -38,30 +45,34 @@
             </div>
         </div>
         <h4>Episode List</h4>
-         <div class="row" style="margin-top: 10px;">
-        <% j=1 %>
-        <% for i in 0..(@season.length-1) %>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                       <span class="card-title black-text">Season <%= j %><% j=j+1 %></span>
-                        <ol>
-                        <% for k in 0..(@season[i].length-1) %> 
-                            <%= form_tag('/pickEpisode', method: :post, id: 'ep-details') do %>
-                            <input name="season" type="hidden" value="<%= (i+1)%>" /> 
-                            <input name="ep" type="hidden" value="<%= k %>" /> 
-                            <li> <%= @season[i][k] %> <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>  
-                            
-                            <input type="submit" />  
-                        <% end %> 
-                        <% end %> <!--form tag -->  
-                       </ol>
-                       
-                     
+        <div class="row" style="margin-top: 10px;">
+            <% if @season == nil || @season.length == 0 %>
+                <div class="col s12 m6">
+                    <p>No listed episodes.</p>
+                </div>
+            <% end %>
+            <% j=1 %>
+            <% for i in 0..(@season.length-1) %>
+                <div class="col s12 m6">
+                    <div class="card">
+                        <div class="card-content black-text">
+                           <span class="card-title black-text">Season <%= j %><% j=j+1 %></span>
+                            <ol>
+                            <% for k in 0..(@season[i].length-1) %> 
+                                <%= form_tag('/episodedetails_init', method: :post, id: 'ep-details') do %>
+                                    <input name="showid" type="hidden" value="<%= @showid %>" /> 
+                                    <input name="season" type="hidden" value="<%= (i+1) %>" /> 
+                                    <input name="episode" type="hidden" value="<%= (k+1) %>" /> 
+                                    <li>
+                                        <%= @season[i][k] %> <a href="" onclick="$(this).closest('form').submit();"><i class="mdi-action-info-outline"></i></a>
+                                    </li>
+                                <% end %> 
+                            <% end %> <!--form tag -->  
+                           </ol>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <%end%>
+            <%end%>
         </div>
        
     </div>

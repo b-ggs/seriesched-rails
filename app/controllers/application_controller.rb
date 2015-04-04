@@ -56,17 +56,39 @@ class ApplicationController < ActionController::Base
     @images = images_from_id_array(@ids)
   end
 
-  def episodedetails
-    @pick = session[:pickedEpisode].to_s
-  end
+  def episodedetails_init
+    showid = params[:showid]
+    season = params[:season]
+    episode = params[:episode]
 
-  def pickEpisode
-    s = params[:season]
-    e = params[:ep]
+    if episode.length == 1
+      episode = "0" + episode
+    end
 
-    session[:pickedEpisode] = s + "x" + e
+    session[:episodedetails_showid] = showid
+    session[:episodedetails_season] = season
+    session[:episodedetails_episode] = episode
 
     redirect_to '/episodedetails'
+  end
+
+  def episodedetails
+    @showid = session[:episodedetails_showid].to_s
+    @season = session[:episodedetails_season].to_s
+    @episode = session[:episodedetails_episode].to_s
+
+    session[:episodedetails_showid] = nil
+    session[:episodedetails_season] = nil
+    session[:episodedetails_episode] = nil
+
+    sxep = @season + "x" + @episode
+    doc = xml_episode_details(@showid, sxep)
+
+    @episode_title = comma_delimited_string_from_array(data_array_from_doc_xpath_tag(doc, "//episode//title", "title"))
+    @show_name = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "name"))
+    @show_runtime = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "runtime"))
+    @show_airdate = comma_delimited_string_from_array(data_array_from_doc_xpath_tag(doc, "//episode//airdate", "airdate"))
+    @show_url = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "url"))
   end
 
   def schedule
@@ -77,6 +99,11 @@ class ApplicationController < ActionController::Base
     @ids = session[:search_ids]
     @names = session[:search_names]
     @images = session[:search_images]
+
+    session[:search_query] = nil
+    session[:search_ids] = nil
+    session[:search_names] = nil
+    session[:search_images] = nil
 
     if @query == nil
       @query = ""
@@ -102,7 +129,7 @@ class ApplicationController < ActionController::Base
   end
 
   def showdetails_init
-    session[:showdetails_showid] = params[:details_showid]
+    session[:showdetails_showid] = params[:showdetails_showid]
     redirect_to '/showdetails'
   end
 
@@ -133,7 +160,7 @@ class ApplicationController < ActionController::Base
       @show_ended = "Ongoing"
     end
 
-    doc = xml_full_episode_list(showid)
+    doc = xml_full_episode_list(@showid)
     @total_season = data_array_from_doc_tag(doc, "totalseasons")
     @episode_snum = data_array_from_doc_tag(doc, "seasonnum")
     @episode_name = data_array_from_doc_tag(doc, "title")
@@ -149,7 +176,26 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def showdetails_action
+  def showdetails_add
+    username = User.find(session[:user_id]).username
+    showid = params[:showdetails_showid]
+
+    Collection.create(username:username, showid:showid)
+
+    session[:showdetails_showid] = showid
+
+    redirect_to "/showdetails"
+  end
+
+  def showdetails_remove
+    username = User.find(session[:user_id]).username
+    showid = params[:showdetails_showid]
+
+    Collection.where(username:username, showid:showid).first.destroy
+
+    session[:showdetails_showid] = showid
+
+    redirect_to "/showdetails"
   end
 
   # MISC FUNCTIONS
@@ -168,19 +214,18 @@ class ApplicationController < ActionController::Base
   end
 
   def is_in_collection(showid)
-    is_in = false 
+    is_in = false
     username = User.find(session[:user_id]).username
-    ids_collection = Collection.where(username:@username).all.to_a
+    ids_collection = Collection.where(username:username).all.to_a
     ids = []
 
     for i in 0..ids_collection.length-1
-      @ids.push(ids_collection[i].showid)
+      ids.push(ids_collection[i].showid)
     end
 
     for i in 0..ids.length-1
-      if ids[i] == showid
+      if ids[i].to_s == showid.to_s
         is_in = true
-        i = ids.length
       end
     end
 
@@ -189,6 +234,16 @@ class ApplicationController < ActionController::Base
 
   def data_array_from_doc_tag(doc, tag)
     xpath = "//" + tag
+    s = doc.xpath(xpath).to_s
+
+    tagopen = "<" + tag + ">"
+    tagclose = "</" + tag + ">"
+
+    ret = s.split(tagopen).map{|x|x.split tagclose}.flatten.map(&:strip).reject(&:empty?)
+    ret
+  end
+
+  def data_array_from_doc_xpath_tag(doc, xpath, tag)
     s = doc.xpath(xpath).to_s
 
     tagopen = "<" + tag + ">"
@@ -247,21 +302,24 @@ class ApplicationController < ActionController::Base
   end
 
   def xml_full_show_info(showid)
-    showid_str = URI.escape(showid.to_s) + ""
+    # showid_str = URI.escape(showid.to_s) + ""
+    showid_str = showid.to_s + ""
     url = "http://services.tvrage.com/feeds/full_show_info.php?sid=" +  showid_str + ""
     doc = Nokogiri::XML(open(url).read)
     doc
   end
 
   def xml_full_episode_list(showid)
-    showid_str = URI.escape(showid.to_s) + ""
+    # showid_str = URI.escape(showid.to_s) + ""
+    showid_str = showid.to_s + ""
     url = "http://services.tvrage.com/feeds/episode_list.php?sid=" +  showid_str + ""
     doc = Nokogiri::XML(open(url).read)
     doc
   end
 
   def xml_episode_details(showid, ep)
-    showid_str = URI.escape(showid.to_s) + ""
+    # showid_str = URI.escape(showid.to_s) + ""
+    showid_str = showid.to_s + ""
     url = "http://services.tvrage.com/feeds/episodeinfo.php?sid=" +  showid_str + "&ep=" + ep + ""
     doc = Nokogiri::XML(open(url).read)
     doc
