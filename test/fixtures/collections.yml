@@ -2,12 +2,8 @@
 
 one:
   username: MyString
-  email: MyString
-  password_hash: MyString
-  salt: MyString
+  showid: MyString
 
 two:
   username: MyString
-  email: MyString
-  password_hash: MyString
-  salt: MyString
+  showid: MyString

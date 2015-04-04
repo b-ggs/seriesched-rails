@@ -1,10 +1,20 @@
 Rails.application.routes.draw do
   root 'application#index'
+
+  get 'home' => 'application#home'
+  get 'collection' => 'application#collection'
+  get 'episodedetails' => 'application#episodedetails'
+  get 'profile' => 'application#profile'
+  get 'schedule' => 'application#schedule'
+  get 'search' => 'application#search'
+  get 'showdetails' => 'application#showdetails'
+
   post 'signup' => 'application#signup'
   post 'login' => 'application#login'
   post 'logout' => 'application#logout'
-
-  get 'home' => 'application#home'
+  post 'search_action' => 'application#search_action'
+  post 'showdetails_init' => 'application#showdetails_init'
+  post 'showdetails_action' => 'application#showdetails_action'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

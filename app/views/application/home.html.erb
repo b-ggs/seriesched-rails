@@ -8,19 +8,19 @@
                     <li class="nav-search"><a href="search.html" target="innerframe" onclick="setActive($(this).parent('li'))">Search</a></li>
                     <li class="nav-schedule"><a href="schedule.html" target="innerframe" onclick="setActive($(this).parent('li'))">Schedule</a></li>
                     <li class="nav-collection"><a href="collection.html" target="innerframe" onclick="setActive($(this).parent('li'))">Collection</a></li>
-                    <li><a href="#" class="dropdown-button" data-activates="user-dropdown">lancealcabasa</a></li>
+                    <li><a href="#" class="dropdown-button" data-activates="user-dropdown"><%= @username %></a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
-                    <li onclick="setActive(this)" class="nav-search"><a href="#">Search</a></li>
-                    <li onclick="setActive(this)" class="nav-schedule"><a href="schedule.html" target="innerframe">Schedule</a></li>
-                    <li onclick="setActive(this)" class="nav-collection"><a href="collection.html" target="innerframe">Collection</a></li>
-                    <li><a href="#" class="dropdown-button" data-activates="user-dropdown">lancealcabasa</a></li>
+                    <li class="nav-search"><a href="search.html" target="innerframe" onclick="setActive($(this).parent('li'))">Search</a></li>
+                    <li class="nav-schedule"><a href="schedule.html" target="innerframe" onclick="setActive($(this).parent('li'))">Schedule</a></li>
+                    <li class="nav-collection"><a href="collection.html" target="innerframe" onclick="setActive($(this).parent('li'))">Collection</a></li>
+                    <li><a href="#" class="dropdown-button" data-activates="user-dropdown"><%= @username %></a></li>
                 </ul>
             </div>
         </nav>
     </header>
     <main>
-        <iframe id="innerframe" name="innerframe" src="schedule.html" onload="this.height= ($(window).height() - $('header').height() - 10);">
+        <iframe id="innerframe" name="innerframe" src="schedule.html" onload="this.height= ($(window).height() - $('header').height() - 17);" style="margin-top: 7px;">
         </iframe>
     </main>
 </body>

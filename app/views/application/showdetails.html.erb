@@ -1,15 +1,15 @@
 <body>
     <div class="container">
-        <h4>How to Get Away with Murder</h4>
+        <h4><%= @show_name %></h4>
         <div class="row" style="margin-top: 10px;">
             <div class="col s12 m6">
                 <div class="card">
                     <div class="card-image">
-                        <img src="img/htgawm.jpg">
+                        <%= image_tag @show_image, :class => "showdetails" %>
                     </div>
                     <div class="card-action">
                         <a href="#">Remove from Collection</a>
-                        <a href="http://tvrage.com/how-to-get-away-with-murder" target="_blank">View on TVRage</a>
+                        <a href="<%= @show_showlink %>" target="_blank">View on TVRage</a>
                     </div>
                 </div>
             </div>
@@ -17,17 +17,16 @@
                 <div class="card">
                     <div class="card-content black-text">
                         <span class="card-title black-text">Details</span>
-                        <p><b>Started:</b> September 25, 2014</p>
-                        <p><b>Ended:</b> ongoing</p>
-                        <p><b>Origin Country:</b> USA</p>
-                        <p><b>Status:</b> New Series</p>
-                        <p><b>Classification:</b> Scripted</p>
-                        <p><b>Genres:</b> Crime, Mystery, Thriller</p>
-                        <p><b>Runtime:</b> 60 minutes</p>
-                        <p><b>Network:</b> ABC, US</p>
-                        <p><b>Air Time:</b> 22:00</p>
-                        <p><b>Timezone:</b> GMT-5 +DST</p>
-                        <p><b>Air Day:</b> Thursday</p>
+                        <p><b>Started:</b> <%= @show_started %></p>
+                        <p><b>Ended:</b> <%= @show_ended %></p>
+                        <p><b>Origin Country:</b> <%= @show_origin_country %></p>
+                        <p><b>Status:</b> <%= @show_status %></p>
+                        <p><b>Classification:</b> <%= @show_classification %></p>
+                        <p><b>Genres:</b> <%= @show_genre %></p>
+                        <p><b>Runtime:</b> <%= @show_runtime %> minutes</p>
+                        <p><b>Air Time:</b> <%= @show_airtime %></p>
+                        <p><b>Air Day:</b> <%= @show_airday %></p>
+                        <p><b>Timezone:</b> <%= @show_timezone %></p>
                     </div>
                 </div>
             </div>

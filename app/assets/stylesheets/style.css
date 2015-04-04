@@ -10,3 +10,16 @@ body
 {
 	background-color: #fafafa;
 }
+
+.search
+{
+	
+}
+
+.card-image-override
+{
+	width: 100%;
+	min-height: 200px;
+	max-height: 200px;
+	overflow: hidden;
+}

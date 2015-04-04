@@ -1,32 +1,42 @@
 <body>
     <div class="container">
         <div class="row" style="margin-bottom: -30px">
-            <form class="col s12">
+            <%= form_tag('/search_action', method: :post, id: 'search-box') do %>
                 <div class="row">
                     <div class="input-field col s11">
-                        <input class="search-field" type="text" value="how to get away">
+                        <input class="search-field" name="searchquery" type="text" value="<%= @query %>">
                     </div>
                     <div class="input-field col s1 right">
-                        <a class="btn-floating btn-large waves-effect waves-light red"><i class="mdi-action-search"></i></a>
+                        <a class="btn-floating btn-large waves-effect waves-light red" onclick="document.getElementById('search-box').submit()"><i class="mdi-action-search"></i></a>
                     </div>
                 </div>
-            </form>
+            <% end %>
         </div>
-        <h4>Search results for <i>"how to get away"</i></h4>
-        <div class="row">
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/htgawm.jpg">
+        <% if @query != "" %>
+            <h4>Search results for <i>"<%= @query %>"</i></h4>
+            <!-- @ids @names @images -->
+            <div class="row">
+                <% for i in 0..@ids.length-1 %>
+                    <div class="col s12 m6">
+                        <div class="card">
+                            <div class="card-image">
+                                <div class="card-image-override">
+                                    <%= image_tag @images[i], :class => "search" %>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title grey-text text-darken-4"><%= @names[i] %></span>
+                            </div>
+                            <div class="card-action">
+                                <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                     <input name="showdetails_showid" type="hidden" value="<%= @ids[i] %>">
+                                    <a href="#" onclick="document.getElementById('show-details').submit()">Show Details</a>
+                                <% end %>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">How to Get Away with Murder</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
+                <% end %>
             </div>
-        </div>
+        <% end %>
     </div>
 </body>
