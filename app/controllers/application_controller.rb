@@ -109,6 +109,11 @@ class ApplicationController < ActionController::Base
     if @show_ended == "<ended/>"
       @show_ended = "Ongoing"
     end
+
+    doc = xml_full_episode_list(showid)
+    @total_season = data_array_from_doc_tag(doc, "totalseasons")
+    @episode_snum = data_array_from_doc_tag(doc, "seasonnum")
+    @episode_name = data_array_from_doc_tag(doc, "title")
   end
 
   def showdetails_action
@@ -172,6 +177,13 @@ class ApplicationController < ActionController::Base
   def xml_full_show_info(showid)
     showid_str = URI.escape(showid.to_s) + ""
     url = "http://services.tvrage.com/feeds/full_show_info.php?sid=" +  showid_str + ""
+    doc = Nokogiri::XML(open(url).read)
+    doc
+  end
+
+  def xml_full_episode_list(showid)
+    showid_str = URI.escape(showid.to_s) + ""
+    url = "http://services.tvrage.com/feeds/episode_list.php?sid=" +  showid_str + ""
     doc = Nokogiri::XML(open(url).read)
     doc
   end
