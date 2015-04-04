@@ -29,6 +29,7 @@
                             </div>
                             <div class="card-action">
                                 <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                    <input type="submit" />
                                      <input name="showdetails_showid" type="hidden" value="<%= @ids[i] %>">
                                     <a href="#" onclick="document.getElementById('show-details').submit()">Show Details</a>
                                 <% end %>

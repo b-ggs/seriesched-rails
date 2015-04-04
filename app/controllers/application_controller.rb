@@ -46,6 +46,14 @@ class ApplicationController < ActionController::Base
   end
 
   def episodedetails
+    @pick = session[:pickedEpisode].to_s
+  end
+
+  def pickEpisode
+    s = params[:season]
+    e = params[:ep]
+
+    session[:pickedEpisode] = s + "x"+e
   end
 
   def schedule
@@ -114,6 +122,16 @@ class ApplicationController < ActionController::Base
     @total_season = data_array_from_doc_tag(doc, "totalseasons")
     @episode_snum = data_array_from_doc_tag(doc, "seasonnum")
     @episode_name = data_array_from_doc_tag(doc, "title")
+
+    @season = Array.new 
+    count = -1;
+    for i in 0..(@episode_snum.length-1)
+      if @episode_snum[i] == "01"
+        count = count + 1
+        @season[count] = Array.new
+      end
+       @season[count].push(@episode_name[i])
+    end
   end
 
   def showdetails_action
@@ -184,6 +202,13 @@ class ApplicationController < ActionController::Base
   def xml_full_episode_list(showid)
     showid_str = URI.escape(showid.to_s) + ""
     url = "http://services.tvrage.com/feeds/episode_list.php?sid=" +  showid_str + ""
+    doc = Nokogiri::XML(open(url).read)
+    doc
+  end
+
+  def xml_episode_details(showid, ep)
+    showid_str = URI.escape(showid.to_s) + ""
+    url = "http://services.tvrage.com/feeds/episodeinfo.php?sid=" +  showid_str + "&ep=" + ep + ""
     doc = Nokogiri::XML(open(url).read)
     doc
   end

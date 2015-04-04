@@ -32,33 +32,25 @@
             </div>
         </div>
         <h4>Episode List</h4>
-        <div class="row" style="margin-top: 10px;">
-                    
-                    <% if @epsiode_snum != "" %>
+         <div class="row" style="margin-top: 10px;">
+        <% j=1 %>
+        <% for i in 0..(@season.length-1) %>
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content black-text">
+                       <span class="card-title black-text">Season <%= j %><% j=j+1 %></span>
                         
-                        <%j=1%>
-                        <%x=0%>
-                            <% for i in 0..(@episode_snum.length-1) %>
-                                
-                                <% if @episode_snum[i] == "01" %>
-                                    <% if x!= 0%>
-                                        </ol>
-                                        </div>
-                                        </div>
-                                        </div>
-                                    <%end %>
-                                 <div class="col s12 m6">
-                                    <div class="card">
-                                        <div class="card-content black-text">
-                                    <% x=1 %>
-                                        <span class="card-title black-text">Season <%= j %><% j = j+1 %></span>
-                                    <ol>
-                                <% end %>
+                        <% for k in 0..(@season[i].length-1) %> 
+                            <li> <%= @season[i][k] %> <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>     
+                        <% end %>   
+                       <ol>
 
-                            <li> <%= @episode_name[i] %> <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>                
-                            <% end %>
-                    <% end %>
-                       
+                       </ol>
+                    </div>
+                </div>
+            </div>
+        <%end%>
         </div>
+       
     </div>
 </body>
