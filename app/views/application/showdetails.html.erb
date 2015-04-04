@@ -38,31 +38,31 @@
             </div>
         </div>
         <h4>Episode List</h4>
-        <div class="row" style="margin-top: 10px;">
+         <div class="row" style="margin-top: 10px;">
+        <% j=1 %>
+        <% for i in 0..(@season.length-1) %>
             <div class="col s12 m6">
                 <div class="card">
                     <div class="card-content black-text">
-                        <span class="card-title black-text">Season 1</span>
+                       <span class="card-title black-text">Season <%= j %><% j=j+1 %></span>
                         <ol>
-                            <li>"Pilot" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"It's All Her Fault" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Smile, or Go to Jail" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Let's Get to Scooping" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"We're Not Friends" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Freakin' Whack-a-Mole" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"He Deserved to Die" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"He Has a Wife" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Kill Me, Kill Me, Kill Me" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Hello Raskolnikov" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Best Christmas Ever" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"She's a Murderer" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"Mama's Here Now" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"The Night Lila Died" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                            <li>"It's All My Fault" <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>
-                        </ol>
+                        <% for k in 0..(@season[i].length-1) %> 
+                            <%= form_tag('/pickEpisode', method: :post, id: 'ep-details') do %>
+                            <input name="season" type="hidden" value="<%= (i+1)%>" /> 
+                            <input name="ep" type="hidden" value="<%= k %>" /> 
+                            <li> <%= @season[i][k] %> <a href="episodedetails.html"><i class="mdi-action-info-outline"></i></a></li>  
+                            
+                            <input type="submit" />  
+                        <% end %> 
+                        <% end %> <!--form tag -->  
+                       </ol>
+                       
+                     
                     </div>
                 </div>
             </div>
+        <%end%>
         </div>
+       
     </div>
 </body>
