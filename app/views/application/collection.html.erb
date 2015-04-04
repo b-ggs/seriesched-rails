@@ -1,111 +1,29 @@
 <body>
     <div class="container">
         <h4>Collection</h4>
+        <%= @ids %>
+        <%= @names %>
+        <%= @images %>
         <div class="row" style="margin-top: 10px;">
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/htgawm.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">How to Get Away with Murder</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/2brokegirls.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">2 Broke Girls</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
+            <% for i in 0..@ids.length-1 %>
+                <div class="col s12 m6">
+                    <div class="card medium">
+                        <div class="card-image">
+                            <!-- <img src="img/htgawm.jpg"> -->
+                            <%= image_tag @images[i], :class => "search" %>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4"><%= @ids[i] %> - <%= @names[i] %></span>
+                        </div>
+                        <div class="card-action">
+                            <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                <input name="details_showid" type="hidden" value="<%= @ids[i] %>">
+                                <button id="showdetails_submit" class="btn-flat waves-effect waves-light orange-text" type="submit" name="action">Show Details</button>
+                            <% end %>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/ncisla.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">NCIS: Los Angeles</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/scorpion.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">Scorpion</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div><div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/theoddcouple.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">The Odd Couple</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/thesimpsons.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">The Simpsons</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/americandad.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">American Dad!</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card medium">
-                    <div class="card-image">
-                        <img src="img/familyguy.jpg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title grey-text text-darken-4">Family Guy</span>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                    </div>
-                </div>
-            </div>
+            <% end %>
         </div>
     </div>
 </body>

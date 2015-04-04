@@ -43,6 +43,17 @@ class ApplicationController < ActionController::Base
   end
 
   def collection
+    @username = User.find(session[:user_id]).username
+    ids_collection = Collection.where(username:@username).all.to_a
+
+    @ids = []
+
+    for i in 0..ids_collection.length-1
+      @ids.push(ids_collection[i].showid)
+    end
+
+    @names = names_from_id_array(@ids)
+    @images = images_from_id_array(@ids)
   end
 
   def episodedetails
@@ -81,18 +92,20 @@ class ApplicationController < ActionController::Base
   end
 
   def showdetails_init
-    session[:showdetails_showid] = params[:showdetails_showid]
-
+    session[:showdetails_showid] = params[:details_showid]
     redirect_to '/showdetails'
   end
 
   def showdetails
-    showid = session[:showdetails_showid]
+    @showid = session[:showdetails_showid]
+    session[:showdetails_showid] = nil
 
-    doc = xml_full_show_info(showid)
+    @is_in_collection = is_in_collection(@showid)
+
+    doc = xml_full_show_info(@showid)
 
     @show_name = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "name"))
-    @show_image = get_show_image(showid)
+    @show_image = get_show_image(@showid)
 
     @show_showlink = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "showlink"))
     @show_started = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "started"))
@@ -129,6 +142,26 @@ class ApplicationController < ActionController::Base
     string
   end
 
+  def is_in_collection(showid)
+    is_in = false 
+    username = User.find(session[:user_id]).username
+    ids_collection = Collection.where(username:@username).all.to_a
+    ids = []
+
+    for i in 0..ids_collection.length-1
+      @ids.push(ids_collection[i].showid)
+    end
+
+    for i in 0..ids.length-1
+      if ids[i] == showid
+        is_in = true
+        i = ids.length
+      end
+    end
+
+    is_in
+  end
+
   def data_array_from_doc_tag(doc, tag)
     xpath = "//" + tag
     s = doc.xpath(xpath).to_s
@@ -151,7 +184,26 @@ class ApplicationController < ActionController::Base
     images
   end
 
+  def names_from_id_array(ids)
+    names = []
+
+    for i in 0..ids.length-1
+      name = get_show_name(ids[i])
+      names.push(name)
+    end
+
+    names
+  end
+
   # EASY GETTERS
+
+  def get_show_name(showid)
+    doc = xml_full_show_info(showid)
+    name_node = doc.xpath("//name").to_s
+    name_arr = data_array_from_doc_tag(doc, "name")
+    name = name_arr[0]
+    name
+  end
 
   def get_show_image(showid)
     doc = xml_full_show_info(showid)

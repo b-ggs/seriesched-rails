@@ -15,6 +15,9 @@
         <% if @query != "" %>
             <h4>Search results for <i>"<%= @query %>"</i></h4>
             <!-- @ids @names @images -->
+            <%= @ids %>
+            <%= @names %>
+            <%= @images %>
             <div class="row">
                 <% for i in 0..@ids.length-1 %>
                     <div class="col s12 m6">
@@ -29,8 +32,8 @@
                             </div>
                             <div class="card-action">
                                 <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
-                                     <input name="showdetails_showid" type="hidden" value="<%= @ids[i] %>">
-                                    <a href="#" onclick="document.getElementById('show-details').submit()">Show Details</a>
+                                    <input name="details_showid" type="hidden" value="<%= @ids[i] %>">
+                                    <button id="showdetails_submit" class="btn-flat waves-effect waves-light orange-text" type="submit" name="action">Show Details</button>
                                 <% end %>
                             </div>
                         </div>
