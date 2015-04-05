@@ -92,6 +92,9 @@ class ApplicationController < ActionController::Base
   end
 
   def schedule
+    doc = xml_full_schedule()
+
+    @temp = doc.xpath("//schedule//DAY").to_s
   end
 
   def search_init
@@ -226,27 +229,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def data_array_from_doc_tag(doc, tag)
-    xpath = "//" + tag
-    s = doc.xpath(xpath).to_s
-
-    tagopen = "<" + tag + ">"
-    tagclose = "</" + tag + ">"
-
-    ret = s.split(tagopen).map{|x|x.split tagclose}.flatten.map(&:strip).reject(&:empty?)
-    ret
-  end
-
-  def data_array_from_doc_xpath_tag(doc, xpath, tag)
-    s = doc.xpath(xpath).to_s
-
-    tagopen = "<" + tag + ">"
-    tagclose = "</" + tag + ">"
-
-    ret = s.split(tagopen).map{|x|x.split tagclose}.flatten.map(&:strip).reject(&:empty?)
-    ret
-  end
-
   def images_from_id_array(ids)
     images = []
 
@@ -267,6 +249,29 @@ class ApplicationController < ActionController::Base
     end
 
     names
+  end
+
+  # DOC FUNCTIONS
+
+  def data_array_from_doc_tag(doc, tag)
+    xpath = "//" + tag
+    s = doc.xpath(xpath).to_s
+
+    tagopen = "<" + tag + ">"
+    tagclose = "</" + tag + ">"
+
+    ret = s.split(tagopen).map{|x|x.split tagclose}.flatten.map(&:strip).reject(&:empty?)
+    ret
+  end
+
+  def data_array_from_doc_xpath_tag(doc, xpath, tag)
+    s = doc.xpath(xpath).to_s
+
+    tagopen = "<" + tag + ">"
+    tagclose = "</" + tag + ">"
+
+    ret = s.split(tagopen).map{|x|x.split tagclose}.flatten.map(&:strip).reject(&:empty?)
+    ret
   end
 
   # EASY GETTERS
@@ -315,6 +320,12 @@ class ApplicationController < ActionController::Base
     # showid_str = URI.escape(showid.to_s) + ""
     showid_str = showid.to_s + ""
     url = "http://services.tvrage.com/feeds/episodeinfo.php?sid=" +  showid_str + "&ep=" + ep + ""
+    doc = Nokogiri::XML(open(url).read)
+    doc
+  end
+
+  def xml_full_schedule
+    url = "http://services.tvrage.com/feeds/fullschedule.php?country=US&24_format=1"
     doc = Nokogiri::XML(open(url).read)
     doc
   end
