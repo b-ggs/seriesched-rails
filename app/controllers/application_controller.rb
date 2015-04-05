@@ -30,13 +30,17 @@ class ApplicationController < ActionController::Base
   end
   
   def index
-    if session[:user_id]
+    if session[:user_id] != nil
       redirect_to '/home'
     end
   end
 
   def home
-    @username = User.find(session[:user_id]).username
+    if session[:user_id] == nil
+      redirect_to root_path
+    else
+      @username = User.find(session[:user_id]).username
+    end
   end
 
   def profile
@@ -77,10 +81,6 @@ class ApplicationController < ActionController::Base
     @season = session[:episodedetails_season].to_s
     @episode = session[:episodedetails_episode].to_s
 
-    session[:episodedetails_showid] = nil
-    session[:episodedetails_season] = nil
-    session[:episodedetails_episode] = nil
-
     sxep = @season + "x" + @episode
     doc = xml_episode_details(@showid, sxep)
 
@@ -94,16 +94,20 @@ class ApplicationController < ActionController::Base
   def schedule
   end
 
+  def search_init
+    session[:search_query] = nil
+    session[:search_ids] = nil
+    session[:search_names] = nil
+    session[:search_images] = nil
+
+    redirect_to "/search"
+  end
+
   def search
     @query = session[:search_query]
     @ids = session[:search_ids]
     @names = session[:search_names]
     @images = session[:search_images]
-
-    session[:search_query] = nil
-    session[:search_ids] = nil
-    session[:search_names] = nil
-    session[:search_images] = nil
 
     if @query == nil
       @query = ""
@@ -135,7 +139,6 @@ class ApplicationController < ActionController::Base
 
   def showdetails
     @showid = session[:showdetails_showid]
-    session[:showdetails_showid] = nil
 
     @is_in_collection = is_in_collection(@showid)
 
@@ -214,22 +217,13 @@ class ApplicationController < ActionController::Base
   end
 
   def is_in_collection(showid)
-    is_in = false
     username = User.find(session[:user_id]).username
-    ids_collection = Collection.where(username:username).all.to_a
-    ids = []
-
-    for i in 0..ids_collection.length-1
-      ids.push(ids_collection[i].showid)
+    set = Collection.where(username:username, showid:showid)
+    if set.length > 0
+      true
+    else
+      false
     end
-
-    for i in 0..ids.length-1
-      if ids[i].to_s == showid.to_s
-        is_in = true
-      end
-    end
-
-    is_in
   end
 
   def data_array_from_doc_tag(doc, tag)
