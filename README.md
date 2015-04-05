@@ -14,5 +14,7 @@ This was implemented using:
 - JavaScript
 - JQuery (https://jquery.com/)
 - Ruby on Rails (http://rubyonrails.org)
+- bcrypt (http://bcrypt-ruby.rubyforge.org)
+- Nokogiri (http://www.nokogiri.org)
 - Materialize (http://materializecss.com)
 - TVRage API (http://services.tvrage.com/info.php?page=main)
