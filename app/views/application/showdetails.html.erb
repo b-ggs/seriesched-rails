@@ -11,18 +11,18 @@
                         <% if @is_in_collection %>
                             <%= form_tag('/showdetails_remove', method: :post, id: 'show-remove') do %>
                                 <input type="hidden" name="showdetails_showid" value="<%= @showid %>" />
+                                <input type="hidden" name="showdetails_url" value="<%= @show_showlink %>" />
                                 <a href="" onclick="$(this).closest('form').submit();">Remove from Collection</a>
                                 <a href="<%= @show_showlink %>" target="_blank">View on TVRage</a>
                             <% end %>
                         <% else %>
                             <%= form_tag('/showdetails_add', method: :post, id: 'show-add') do %>
                                 <input type="hidden" name="showdetails_showid" value="<%= @showid %>" />
+                                <input type="hidden" name="showdetails_url" value="<%= @show_showlink %>" />
                                 <a href="" onclick="$(this).closest('form').submit();">Add to Collection</a>
                                 <a href="<%= @show_showlink %>" target="_blank">View on TVRage</a>
                             <% end %>
                         <% end %>
-
-                        
                     </div>
                 </div>
             </div>
@@ -66,7 +66,8 @@
                                     <li>
                                         <%= @season[i][k] %> <a href="" onclick="$(this).closest('form').submit();"><i class="mdi-action-info-outline"></i></a>
                                     </li>
-                                <% end %> 
+                                <% end %>
+                                <br />
                             <% end %> <!--form tag -->  
                            </ol>
                         </div>

@@ -1,114 +1,42 @@
 <body>
-    <%= @temp %>
     <div class="container">
-        <h4>Date</h4>
-        <div class="row" style="margin-top: 10px;">
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">Show</span>
-                        <p>Season S Episode E: "Title"</p>
+        <% if @collection_length <= 0 %>
+            <h4>No upcoming episodes, becuase there are no shows in your collection.</h4>
+                <p>Look for your favorite shows over at <a href="/search">Search</a>, or discover some new ones over at <a href="/browse">Browse</a>!</p>
+        <% elsif @schedule_length <= 0 %>
+            <h4>No upcoming episodes this week.</h4>
+                <p>Discover some new shows over at <a href="/browse">Browse</a>!</p>
+        <% else %>
+            <% @schedule.each do |schedule_day| %>
+                <% if schedule_day["data"].present? %>
+                    <h4><%= schedule_day["day"] %></h4>
+                    <div class="row" style="margin-top: 10px;">
+                        <% schedule_day["data"].each do |schedule_show| %>
+                            <div class="col s12 m6">
+                                <div class="card">
+                                    <div class="card-content black-text">
+                                        <span class="card-title black-text"><%= schedule_show["name"] %></span>
+                                        <p>Season <%= schedule_show["season"] %> Episode <%= schedule_show["episode"] %></p>
+                                        <p><%= schedule_show["time"] %> GMT -5</p>
+                                    </div>
+                                    <div class="card-action">
+                                        <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                            <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" />
+                                            <a href="" onclick="$(this).closest('#show-details').submit();">Show Details</a>
+                                        <% end %>
+                                        <%= form_tag('/episodedetails_init', method: :post, id: 'ep-details') do %>
+                                            <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" /> 
+                                            <input name="season" type="hidden" value="<%= schedule_show["season"] %>" /> 
+                                            <input name="episode" type="hidden" value="<%= schedule_show["episode"] %>" />
+                                            <a href="" onclick="$(this).closest('#ep-details').submit();">Episode Details</a>  
+                                        <% end %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% end %>
                     </div>
-                    <div class="card-action">
-                        <a href="">Show Details</a>
-                        <a href="">Episode Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <h4>Monday, March 16</h4>
-        <div class="row" style="margin-top: 10px;">
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">The Simpsons</span>
-                        <p>Season 26 Episode 17: "Waiting for Duffman"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">Family Guy</span>
-                        <p>Season 13, Episode 13: "Dr. C and the Women"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <h4>Tuesday, March 17</h4>
-        <div class="row" style="margin-top: 10px;">
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">American Dad!</span>
-                        <p>Season 11 Episode 10: "A Star Is Reborn"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <h4>Tuesday, March 24</h4>
-        <div class="row" style="margin-top: 10px;">
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">2 Broke Girls</span>
-                        <p>Season 4 Episode 15: "And the Fat Cat"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">American Dad!</span>
-                        <p>Season 11 Episode 11: "Manhattan Magical Murder Mystery Tour"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">Scorpion</span>
-                        <p>Season 1 Episode 19: "Young Hearts Spark Fire"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">NCIS: Los Angeles</span>
-                        <p>Season 6 Episode 18: "Fighting Shadows"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="showdetails.html">Show Details</a>
-                        <a href='episodedetails.html'>Episode Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <% end %>
+            <% end %>
+        <% end %>
     </div>
 </body>

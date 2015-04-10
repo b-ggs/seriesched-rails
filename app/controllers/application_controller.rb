@@ -26,6 +26,15 @@ class ApplicationController < ActionController::Base
 
   def logout
     session[:user_id] = nil
+    session[:username] = nil
+    session[:search_query] = nil
+    session[:search_ids] = nil
+    session[:search_names] = nil
+    session[:search_images] = nil
+    session[:episodedetails_showid] = nil
+    session[:episodedetails_season] = nil
+    session[:episodedetails_episode] = nil
+
     redirect_to root_path
   end
   
@@ -47,9 +56,67 @@ class ApplicationController < ActionController::Base
   end
 
   def browse
-    doc = xml_full_schedule()
+    doc = txt_quickchedule()
 
-    @temp = doc.xpath("//schedule//DAY").to_s
+    @temp = ""
+
+    schedule_raw = parse_quickschedule(doc)
+    @schedule = []
+
+    current_day = nil
+    current_time = nil
+
+    schedule_days = nil
+    schedule_item = nil
+
+    for i in 0..schedule_raw.length-1
+      s = schedule_raw[i]
+
+      if s == "DAY"
+        # current_day = schedule_raw[i+1]
+        if schedule_days != nil
+          @schedule.push(schedule_days)
+        end
+        schedule_days = Hash.new(nil)
+        schedule_days["day"] = schedule_raw[i+1]
+        schedule_days["data"] = []
+      elsif s == "TIME"
+        current_time = schedule_raw[i+1]
+      elsif s == "SHOW"
+        show_raw = schedule_raw[i+1].split("^").each_slice(1).map{|a| a.join ' '}.flatten.map(&:strip).reject(&:empty?)
+
+        show_network = show_raw[0]
+        show_name = show_raw[1]
+        show_season_episode = show_raw[2].split("x").each_slice(1).map{|a| a.join ' '}.flatten.map(&:strip).reject(&:empty?)
+        show_season = show_season_episode[0]
+        show_episode = show_season_episode[1]
+        show_url = show_raw[3]
+
+        if show_season.to_i.to_s != "0"
+          show_season = show_season.to_i.to_s
+        end
+
+        if show_episode.to_i.to_s != "0"
+          show_episode = show_episode.to_i.to_s
+        end
+
+        schedule_item = Hash.new(nil)
+        schedule_item["time"] = current_time
+        schedule_item["network"] = show_network
+        schedule_item["name"] = show_name
+        schedule_item["season"] = show_season
+        schedule_item["episode"] = show_episode
+        schedule_item["url"] = show_url
+        # schedule_item["sid"] = get_show_id(show_name)
+
+        # schedule.push(schedule_item)
+        schedule_days["data"].push(schedule_item)
+      end
+    end
+
+    if schedule_days != nil
+      @schedule.push(schedule_days)
+    end
   end
 
   def recent
@@ -74,8 +141,17 @@ class ApplicationController < ActionController::Base
     season = params[:season]
     episode = params[:episode]
 
-    if episode.length == 1
-      episode = "0" + episode
+    showname = params[:showname]
+
+    if showid.present?
+      if episode.length == 1
+        episode = "0" + episode
+      end
+    elsif showname.present?
+      showid = get_show_id(showname)
+      if episode.length == 1
+        episode = "0" + episode
+      end
     end
 
     session[:episodedetails_showid] = showid
@@ -101,32 +177,91 @@ class ApplicationController < ActionController::Base
   end
 
   def schedule
+    @username = User.find(session[:user_id]).username
+    ids_collection = Collection.where(username:@username).all.to_a
+    urls_collection = []
+
+    for i in 0..ids_collection.length-1
+      urls_collection.push(ids_collection[i].url)
+    end
+
+    @collection_length = urls_collection.length
+
     doc = txt_quickchedule()
 
-    @temp = doc.to_s
+    schedule_raw = parse_quickschedule(doc)
+    @schedule = []
+    @schedule_length = 0
 
-    # doc = xml_full_schedule()
+    current_day = nil
+    current_time = nil
 
-    # @temp = data_array_from_doc_end_tag(doc, "//schedule//DAY", "DAY")
+    schedule_days = nil
+    schedule_item = nil
 
-    # @temp = data_array_from_doc_end_tag(doc, "//schedule//DAY", "DAY").first
-    # @attr = get_attr_value(@temp, "DAY")
+    for i in 0..schedule_raw.length-1
+      s = schedule_raw[i]
 
-    # schedule = {}
+      if s == "DAY"
+        # current_day = schedule_raw[i+1]
+        if schedule_days != nil
+          @schedule.push(schedule_days)
+        end
+        schedule_days = Hash.new(nil)
+        schedule_days["day"] = schedule_raw[i+1]
+        schedule_days["data"] = []
+      elsif s == "TIME"
+        current_time = schedule_raw[i+1]
+      elsif s == "SHOW"
+        show_raw = schedule_raw[i+1].split("^").each_slice(1).map{|a| a.join ' '}.flatten.map(&:strip).reject(&:empty?)
 
-    # days_array = data_array_from_doc_end_tag(doc, "//schedule//DAY", "DAY")
+        show_network = show_raw[0]
+        show_name = show_raw[1]
+        show_season_episode = show_raw[2].split("x").each_slice(1).map{|a| a.join ' '}.flatten.map(&:strip).reject(&:empty?)
+        show_season = show_season_episode[0]
+        show_episode = show_season_episode[1]
+        show_url = show_raw[3]
+        if show_url.present?
+          show_url = show_url.split("www.").join()
+        end
 
-    # for i in 0..days_array.length-1
-    #   schedule[days_array[i]] = {}
-    #   times_array = data_array_from_doc_end_tag(doc, "//schedule//DAY//time", "time")
-    #   for j in 0..times_array.length-1
-    #     schedule[days_array[i]][times_array[j]] = {}
-    #   end
-    # end
+        if show_season.to_i.to_s != "0"
+          show_season = show_season.to_i.to_s
+        end
 
-    # schedule_keys = schedule.keys
+        if show_episode.to_i.to_s != "0"
+          show_episode = show_episode.to_i.to_s
+        end
 
-    # @temp = days_array
+        schedule_item = Hash.new(nil)
+        schedule_item["time"] = current_time
+        schedule_item["network"] = show_network
+        schedule_item["name"] = show_name
+        schedule_item["season"] = show_season
+        schedule_item["episode"] = show_episode
+        schedule_item["url"] = show_url
+        
+        contains_flag = false
+
+        for j in 0..urls_collection.length-1
+          curr_url = urls_collection[j].to_s
+          if show_url.present?
+            if show_url.downcase.gsub('-', '_') == curr_url.downcase.gsub('-', '_')
+              contains_flag = true
+            end
+          end
+        end
+
+        if contains_flag == true
+          schedule_days["data"].push(schedule_item)
+          @schedule_length = @schedule_length + 1
+        end
+      end
+    end
+
+    if schedule_days != nil 
+      @schedule.push(schedule_days)
+    end
   end
 
   def search_init
@@ -168,7 +303,15 @@ class ApplicationController < ActionController::Base
   end
 
   def showdetails_init
-    session[:showdetails_showid] = params[:showdetails_showid]
+    showid = params[:showdetails_showid]
+    showname = params[:showname]
+
+    if showid.present?
+      session[:showdetails_showid] = showid
+    elsif showname.present?
+      session[:showdetails_showid] = get_show_id(showname)
+    end
+
     redirect_to '/showdetails'
   end
 
@@ -182,17 +325,17 @@ class ApplicationController < ActionController::Base
     @show_name = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "name"))
     @show_image = get_show_image(@showid)
 
-    @show_showlink = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "showlink"))
-    @show_started = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "started"))
-    @show_ended = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "ended"))
-    @show_origin_country = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "origin_country"))
-    @show_status = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "status"))
-    @show_classification = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "classification"))
-    @show_genre = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "genre"))
-    @show_runtime = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "runtime"))
-    @show_airtime = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "airtime"))
-    @show_airday = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "airday"))
-    @show_timezone = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "timezone"))
+    @show_showlink = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "showlink").uniq.sort)
+    @show_started = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "started").uniq.sort)
+    @show_ended = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "ended").uniq.sort)
+    @show_origin_country = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "origin_country").uniq.sort)
+    @show_status = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "status").uniq.sort)
+    @show_classification = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "classification").uniq.sort)
+    @show_genre = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "genre").uniq.sort)
+    @show_runtime = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "runtime").uniq.sort)
+    @show_airtime = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "airtime").uniq.sort)
+    @show_airday = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "airday").uniq.sort)
+    @show_timezone = comma_delimited_string_from_array(data_array_from_doc_tag(doc, "timezone").uniq.sort)
 
     if @show_ended == "<ended/>"
       @show_ended = "Ongoing"
@@ -217,8 +360,9 @@ class ApplicationController < ActionController::Base
   def showdetails_add
     username = User.find(session[:user_id]).username
     showid = params[:showdetails_showid]
+    url = params[:showdetails_url]
 
-    Collection.create(username:username, showid:showid)
+    Collection.create(username:username, showid:showid, url:url)
 
     session[:showdetails_showid] = showid
 
@@ -306,6 +450,13 @@ class ApplicationController < ActionController::Base
     ret
   end
 
+  def parse_quickschedule(doc)
+    s = doc.to_s
+
+    ret = s.split('[').map{|x|x.split ']'}.flatten.map(&:strip).reject(&:empty?)
+    ret
+  end
+
   # def data_array_from_doc_end_tag(doc, xpath, tag)
   #   s = doc.xpath(xpath).to_s
 
@@ -325,6 +476,14 @@ class ApplicationController < ActionController::Base
     name
   end
 
+  def get_show_id(showname)
+    sid = 1
+    doc = txt_quickinfo(showname)
+    s = doc.to_s
+    sid_raw = s.split(' ').map{|x|x.split '@'}.flatten.map(&:strip).reject(&:empty?)
+    sid_raw[2]
+  end
+
   def get_show_image(showid)
     doc = xml_full_show_info(showid)
     image_node = doc.xpath("//image").to_s
@@ -337,6 +496,12 @@ class ApplicationController < ActionController::Base
 
   def txt_quickchedule
     url = "http://services.tvrage.com/tools/quickschedule.php"
+    doc = open(url).read { |f| f.read }
+    doc
+  end
+
+  def txt_quickinfo(showname)
+    url = "http://services.tvrage.com/tools/quickinfo.php?show=" + URI.escape(showname) + "&exact=1"
     doc = open(url).read { |f| f.read }
     doc
   end

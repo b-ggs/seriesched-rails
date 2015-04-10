@@ -1,20 +1,35 @@
 <body>
-    <%= @temp %>
     <div class="container">
-        <h4>Date</h4>
-        <div class="row" style="margin-top: 10px;">
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content black-text">
-                        <span class="card-title black-text">Show</span>
-                        <p>Season S Episode E: "Title"</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="">Show Details</a>
-                        <a href="">Episode Details</a>
-                    </div>
+        <% if @schedule.present? %>
+            <h4>New This Week</h4>
+            <% @schedule.each do |schedule_day| %>
+                <div class="row" style="margin-top: 10px;">
+                    <% schedule_day["data"].each do |schedule_show| %>
+                        <div class="col s12 m6">
+                            <div class="card">
+                                <div class="card-content black-text">
+                                    <span class="card-title black-text"><%= schedule_show["name"] %></span>
+                                    <p>Season <%= schedule_show["season"] %> Episode <%= schedule_show["episode"] %></p>
+                                    <p><%= schedule_day["day"] %></p>
+                                    <p><%= schedule_show["time"] %> GMT -5</p>
+                                </div>
+                                <div class="card-action">
+                                    <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                        <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" />
+                                        <a href="" onclick="$(this).closest('#show-details').submit();">Show Details</a>
+                                    <% end %>
+                                    <%= form_tag('/episodedetails_init', method: :post, id: 'ep-details') do %>
+                                        <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" /> 
+                                        <input name="season" type="hidden" value="<%= schedule_show["season"] %>" /> 
+                                        <input name="episode" type="hidden" value="<%= schedule_show["episode"] %>" />
+                                        <a href="" onclick="$(this).closest('#ep-details').submit();">Episode Details</a>  
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
                 </div>
-            </div>
-        </div>
+            <% end %>
+        <% end %>
     </div>
 </body>

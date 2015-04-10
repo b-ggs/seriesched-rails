@@ -28,7 +28,6 @@
 </body>
 
 <ul id="user-dropdown" class="dropdown-content">
-    <li><a href="/profile" target="innerframe" onclick="clearActive()">Profile</a></li>
     <%= form_tag('/logout', method: :post, id: 'show-remove') do %>   
         <li><a href="" onclick="$(this).closest('form').submit();">Logout</a></li>
     <% end %>
