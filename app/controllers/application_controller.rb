@@ -46,6 +46,15 @@ class ApplicationController < ActionController::Base
   def profile
   end
 
+  def browse
+    doc = xml_full_schedule()
+
+    @temp = doc.xpath("//schedule//DAY").to_s
+  end
+
+  def recent
+  end
+
   def collection
     @username = User.find(session[:user_id]).username
     ids_collection = Collection.where(username:@username).all.to_a
@@ -92,9 +101,32 @@ class ApplicationController < ActionController::Base
   end
 
   def schedule
-    doc = xml_full_schedule()
+    doc = txt_quickchedule()
 
-    @temp = doc.xpath("//schedule//DAY").to_s
+    @temp = doc.to_s
+
+    # doc = xml_full_schedule()
+
+    # @temp = data_array_from_doc_end_tag(doc, "//schedule//DAY", "DAY")
+
+    # @temp = data_array_from_doc_end_tag(doc, "//schedule//DAY", "DAY").first
+    # @attr = get_attr_value(@temp, "DAY")
+
+    # schedule = {}
+
+    # days_array = data_array_from_doc_end_tag(doc, "//schedule//DAY", "DAY")
+
+    # for i in 0..days_array.length-1
+    #   schedule[days_array[i]] = {}
+    #   times_array = data_array_from_doc_end_tag(doc, "//schedule//DAY//time", "time")
+    #   for j in 0..times_array.length-1
+    #     schedule[days_array[i]][times_array[j]] = {}
+    #   end
+    # end
+
+    # schedule_keys = schedule.keys
+
+    # @temp = days_array
   end
 
   def search_init
@@ -274,6 +306,15 @@ class ApplicationController < ActionController::Base
     ret
   end
 
+  # def data_array_from_doc_end_tag(doc, xpath, tag)
+  #   s = doc.xpath(xpath).to_s
+
+  #   tagclose = "</" + tag + ">"
+
+  #   ret = s.split(tagclose).each_slice(1).map{|a| a.join ' '}.flatten.map(&:strip).reject(&:empty?)
+  #   ret
+  # end
+
   # EASY GETTERS
 
   def get_show_name(showid)
@@ -290,6 +331,14 @@ class ApplicationController < ActionController::Base
     image_arr = data_array_from_doc_tag(doc, "image")
     image = image_arr[0]
     image
+  end
+
+  # TEXT FUNCTIONS
+
+  def txt_quickchedule
+    url = "http://services.tvrage.com/tools/quickschedule.php"
+    doc = open(url).read { |f| f.read }
+    doc
   end
 
   # XML FUNCTIONS

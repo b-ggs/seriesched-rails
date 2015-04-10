@@ -2,9 +2,11 @@ Rails.application.routes.draw do
   root 'application#index'
 
   get 'home' => 'application#home'
+  get 'browse' => 'application#browse'
   get 'collection' => 'application#collection'
   get 'episodedetails' => 'application#episodedetails'
   get 'profile' => 'application#profile'
+  get 'recent' => 'application#recent'
   get 'schedule' => 'application#schedule'
   get 'search' => 'application#search'
   get 'showdetails' => 'application#showdetails'

@@ -6,12 +6,14 @@
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li class="nav-search"><a href="/search" target="innerframe" onclick="setActive($(this).parent('li'))">Search</a></li>
+                    <li class="nav-browse"><a href="/browse" target="innerframe" onclick="setActive($(this).parent('li'))">Browse</a></li>
                     <li class="nav-schedule"><a href="/schedule" target="innerframe" onclick="setActive($(this).parent('li'))">Schedule</a></li>
                     <li class="nav-collection"><a href="/collection" target="innerframe" onclick="setActive($(this).parent('li'))">Collection</a></li>
                     <li><a href="" class="dropdown-button" data-activates="user-dropdown"><%= @username %></a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     <li class="nav-search"><a href="/search" target="innerframe" onclick="setActive($(this).parent('li'))">Search</a></li>
+                    <li class="nav-browse"><a href="/browse" target="innerframe" onclick="setActive($(this).parent('li'))">Browse</a></li>
                     <li class="nav-schedule"><a href="/schedule" target="innerframe" onclick="setActive($(this).parent('li'))">Schedule</a></li>
                     <li class="nav-collection"><a href="/collection" target="innerframe" onclick="setActive($(this).parent('li'))">Collection</a></li>
                     <li><a href="" class="dropdown-button" data-activates="user-dropdown"><%= @username %></a></li>
@@ -20,7 +22,7 @@
         </nav>
     </header>
     <main>
-        <iframe id="innerframe" name="innerframe" src="schedule.html" onload="this.height= ($(window).height() - $('header').height() - 17);" style="margin-top: 7px;">
+        <iframe id="innerframe" name="innerframe" src="/schedule" onload="this.height= ($(window).height() - $('header').height() - 17);" style="margin-top: 7px;">
         </iframe>
     </main>
 </body>
