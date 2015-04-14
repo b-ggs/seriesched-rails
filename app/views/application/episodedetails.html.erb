@@ -16,9 +16,11 @@
                             <p><b>Air Date:</b> <%= @show_airdate %></p>
                         <% end %> 
                     </div>
-                    <div class="card-action">
-                        <a href="<%= @show_url %>" target="_blank">View on TVRage</a>
-                    </div>
+                    <% if @show_url != "" && @show_url != nil %>
+                        <div class="card-action">
+                            <a href="<%= @show_url %>" target="_blank">View on TVRage</a>
+                        </div>
+                    <% end %>
                 </div>
             </div>
         </div>

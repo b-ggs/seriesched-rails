@@ -3,38 +3,52 @@
         <% if @collection_length <= 0 %>
             <h4>No upcoming episodes, becuase there are no shows in your collection.</h4>
                 <p>Look for your favorite shows over at <a href="/search">Search</a>, or discover some new ones over at <a href="/browse">Browse</a>!</p>
-        <% elsif @schedule_length <= 0 %>
+        <% elsif @schedule.length <= 0 %>
             <h4>No upcoming episodes this week.</h4>
                 <p>Discover some new shows over at <a href="/browse">Browse</a>!</p>
         <% else %>
             <% @schedule.each do |schedule_day| %>
+                <% count = 0 %>
+                <% ended = nil %>
                 <% if schedule_day["data"].present? %>
                     <h4><%= schedule_day["day"] %></h4>
-                    <div class="row" style="margin-top: 10px;">
-                        <% schedule_day["data"].each do |schedule_show| %>
-                            <div class="col s12 m6">
-                                <div class="card">
-                                    <div class="card-content black-text">
-                                        <span class="card-title black-text"><%= schedule_show["name"] %></span>
-                                        <p>Season <%= schedule_show["season"] %> Episode <%= schedule_show["episode"] %></p>
-                                        <p><%= schedule_show["time"] %> GMT -5</p>
-                                    </div>
-                                    <div class="card-action">
-                                        <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
-                                            <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" />
-                                            <a href="" onclick="$(this).closest('#show-details').submit();">Show Details</a>
-                                        <% end %>
-                                        <%= form_tag('/episodedetails_init', method: :post, id: 'ep-details') do %>
-                                            <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" /> 
-                                            <input name="season" type="hidden" value="<%= schedule_show["season"] %>" /> 
-                                            <input name="episode" type="hidden" value="<%= schedule_show["episode"] %>" />
-                                            <a href="" onclick="$(this).closest('#ep-details').submit();">Episode Details</a>  
-                                        <% end %>
-                                    </div>
+                    <% if count % 2 == 0 %>
+                        <% ended = false %>
+                        <div class="row" style="margin-top: 10px;">
+                    <% end %>
+                    <% schedule_day["data"].each do |schedule_show| %>
+                        <div class="col s12 m6">
+                            <div class="card">
+                                <div class="card-content black-text">
+                                    <span class="card-title black-text"><%= schedule_show["name"] %></span>
+                                    <p>Season <%= schedule_show["season"] %> Episode <%= schedule_show["episode"] %></p>
+                                    <p><%= schedule_show["time"] %> GMT -5</p>
+                                </div>
+                                <div class="card-action">
+                                    <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                        <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" />
+                                        <a href="" onclick="$(this).closest('#show-details').submit();">Show Details</a>
+                                    <% end %>
+                                    <%= form_tag('/episodedetails_init', method: :post, id: 'ep-details') do %>
+                                        <input name="showname" type="hidden" value="<%= schedule_show["name"] %>" /> 
+                                        <input name="season" type="hidden" value="<%= schedule_show["season"] %>" /> 
+                                        <input name="episode" type="hidden" value="<%= schedule_show["episode"] %>" />
+                                        <a href="" onclick="$(this).closest('#ep-details').submit();">Episode Details</a>  
+                                    <% end %>
                                 </div>
                             </div>
-                        <% end %>
-                    </div>
+                        </div>
+                    <% end %>
+                    <% if count % 2 == 1 %>
+                        <% ended = true %>
+                        </div>
+                    <% end %>
+                    <% count = count + 1 %>
+                <% end %>
+                <% if ended != nil %>
+                    <% if ended == false %>
+                        </div>
+                    <% end %>
                 <% end %>
             <% end %>
         <% end %>

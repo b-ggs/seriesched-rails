@@ -4,27 +4,31 @@
         <% if @ids.length <= 0 %>
             <p>No shows in your collection. Look for your favorite shows over at <a href="/search">Search</a>, or discover some new ones over at <a href="/browse">Browse</a>!</p>
         <% else %>
-            <div class="row" style="margin-top: 10px;">
-                <% for i in 0..@ids.length-1 %>
-                    <div class="col s12 m6">
-                        <div class="card medium">
-                            <div class="card-image">
-                                <!-- <img src="img/htgawm.jpg"> -->
-                                <%= image_tag @images[i], :class => "search" %>
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title grey-text text-darken-4"><%= @names[i] %></span>
-                            </div>
-                            <div class="card-action">
-                                <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
-                                    <input name="showdetails_showid" type="hidden" value="<%= @ids[i] %>">
-                                    <a href="" onclick="$(this).closest('form').submit();">Show Details</a>
-                                <% end %>
-                            </div>
+            <% for i in 0..@ids.length-1 %>
+                <% if i % 2 == 0 %>
+                    <div class="row" style="margin-top: 10px;">
+                <% end %>
+                <div class="col s12 m6">
+                    <div class="card medium">
+                        <div class="card-image">
+                            <!-- <img src="img/htgawm.jpg"> -->
+                            <%= image_tag @images[i], :class => "search" %>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4"><%= @names[i] %></span>
+                        </div>
+                        <div class="card-action">
+                            <%= form_tag('/showdetails_init', method: :post, id: 'show-details') do %>
+                                <input name="showdetails_showid" type="hidden" value="<%= @ids[i] %>">
+                                <a href="" onclick="$(this).closest('form').submit();">Show Details</a>
+                            <% end %>
                         </div>
                     </div>
+                </div>
+                <% if i % 2 == 1 %>
+                    </div>
                 <% end %>
-            </div>
+            <% end %>
         <% end %>
     </div>
 </body>

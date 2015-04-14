@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get 'search' => 'application#search'
   get 'showdetails' => 'application#showdetails'
 
+  get 'testing' => 'application#testing'
+
   post 'signup' => 'application#signup'
   post 'login' => 'application#login'
   post 'logout' => 'application#logout'
@@ -18,6 +20,7 @@ Rails.application.routes.draw do
   post 'showdetails_add' => 'application#showdetails_add'
   post 'showdetails_remove' => 'application#showdetails_remove'
   post 'episodedetails_init' => 'application#episodedetails_init'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
