@@ -22,9 +22,11 @@ class ApplicationController < ActionController::Base
   def login
     user = User.authenticate(params[:username], params[:password])
     if user
+      session[:auth_error] = false
       session[:user_id] = user.id
       redirect_to '/home'
     else
+      session[:auth_error] = true
       redirect_to root_path
     end
   end
@@ -44,6 +46,10 @@ class ApplicationController < ActionController::Base
   end
   
   def index
+    @auth_error = nil
+    if session[:auth_error]
+      @auth_error = true
+    end
     if session[:user_id] != nil
       redirect_to '/home'
     end
@@ -288,7 +294,8 @@ class ApplicationController < ActionController::Base
 
     ids_arr =  data_array_from_doc_tag_txt(doc, "showid", 10)
     names_arr =  data_array_from_doc_tag_txt(doc, "name", 10)
-    images_arr = images_from_id_array_txt(ids_arr)
+    # images_arr = images_from_id_array_txt(ids_arr)
+    images_arr = []
 
     session[:search_query] = params[:searchquery]
     session[:search_ids] = ids_arr

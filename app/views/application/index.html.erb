@@ -114,7 +114,13 @@
                 </button>
                 <!-- </a> -->
             </div>
-       <%end %>
+       <% end %>
         </div>
     </div>
 </body>
+
+<% if @auth_error %>
+    <script>
+        alert("Authentication error. Please check your login credentials.")
+    </script>
+<% end %>
